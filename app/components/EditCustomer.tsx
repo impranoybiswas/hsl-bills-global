@@ -75,7 +75,7 @@ export default function EditCustomer({
 
             <form onSubmit={handleEditCustomer} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm text-left font-medium text-gray-700 mb-1">
                   Name
                 </label>
                 <input
@@ -88,7 +88,7 @@ export default function EditCustomer({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm text-left font-medium text-gray-700 mb-1">
                   Address
                 </label>
                 <input
@@ -101,7 +101,7 @@ export default function EditCustomer({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm text-left font-medium text-gray-700 mb-1">
                   Product
                 </label>
                 <input
@@ -113,7 +113,7 @@ export default function EditCustomer({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm text-left font-medium text-gray-700 mb-1">
                   Price
                 </label>
                 <input
@@ -149,16 +149,17 @@ export default function EditCustomer({
                 <button
                   type="submit"
                   disabled={userRole !== "admin" || loading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? "Saving..." : "Save Changes"}
                 </button>
-                {userRole !== "admin" && (
+                
+              </div>
+              {userRole !== "admin" && (
                 <p className="mt-2 text-sm text-red-500 text-center">
                   Only Admin can edit customers.
                 </p>
               )}
-              </div>
             </form>
           </div>
         </div>

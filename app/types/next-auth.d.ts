@@ -25,6 +25,14 @@ declare global {
     product: string;
   }
 
+  interface User {
+    _id: string;
+    role: string;
+    name: string;
+    email: string;
+    image: string;
+  }
+
   interface Invoice {
     invoice: string;
     date: string;

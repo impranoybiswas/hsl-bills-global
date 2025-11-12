@@ -8,7 +8,7 @@ import { HiDotsVertical } from "react-icons/hi";
 
 const items = [
   {
-    name: "Home",
+    name: "Bills",
     href: "/",
   },
   {
@@ -31,13 +31,18 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <nav className="fixed z-60 bg-white h-14 w-full border-b border-green-500/50 shadow flex items-center justify-between px-4 md:px-8 lg:px-12">
-      <Image
-        className="h-8 w-fit"
+      <Link
+      href={"/"}
+      className="h-8 w-fit"
+      >
+        <Image
+        className="h-full w-full"
         src="/title.png"
         alt="HSL Title"
         width={100}
         height={100}
       />
+      </Link>
       {status === "loading" && (
         <AiOutlineLoading3Quarters size={20} className="animate-spin" />
       )}

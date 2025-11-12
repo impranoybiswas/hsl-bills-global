@@ -3,28 +3,21 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosSecure from "../libs/axiosSecure";
 
-interface UseBillsOptions {
-  customer?: string;
-  status?: string;
-  sortOrder?: "asc" | "desc";
-  enabled?: boolean;
-}
-
 export function useUsers({
-  customer,
-  status,
-  sortOrder,
+  email,
   enabled = true,
-}: UseBillsOptions = {}) {
+}: {
+  email?: string;
+  enabled?: boolean;
+}) {
   return useQuery({
-    queryKey: ["bills", customer, status, sortOrder],
-    queryFn: async (): Promise<Bill[]> => {
+    queryKey: ["users", email],
+    queryFn: async (): Promise<User[]> => {
       const params: Record<string, string> = {};
-      if (customer) params.customer = customer;
-      if (status) params.status = status;
-      if (sortOrder) params.sortOrder = sortOrder;
-
-      const res = await axiosSecure.get<Bill[]>("/api/bills", { params });
+      if (email) params.email = email;
+      const res = await axiosSecure.get<User[]>("/api/users", {
+        params,
+      });
       return res.data;
     },
     enabled,
