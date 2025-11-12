@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { customer, quantity, amount, date } = body;
+    const { customer, quantity, amount, aprxDate, addedBy } = body;
 
     // Basic validation
     if (!customer || !amount) {
@@ -70,10 +70,12 @@ export async function POST(req: NextRequest) {
     // Prepare new bill data
     const newBill = {
       invoice: nextInvoice,
-      date: date || new Date().toISOString(),
+      date: new Date().toISOString(),
       customer,
       quantity,
       amount,
+      aprxDate,
+      addedBy,
       status: "pending",
       method: null,
       paidAt: null,

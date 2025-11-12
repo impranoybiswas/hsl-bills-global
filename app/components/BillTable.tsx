@@ -47,31 +47,25 @@ export default function BillsTable({ userRole }: { userRole: string }) {
   );
 
   return (
-    <section className="w-full flex-1 px-4 md:px-8 lg:px-12 flex flex-col gap-5 py-5">
+    <section className="w-full h-dvh flex-1 px-4 md:px-8 lg:px-12 flex flex-col gap-5 pb-15">
       {/* ===== States ==== */}
 
-      <div className="grid grid-cols-3 gap-2 md:gap-3 lg:gap-5">
-        <div className="card p-2 md:p-4">
-          <span className="text-white text-xs md:text-sm">Total Bills</span>
-          <strong className="text-blue-500 font-bold text-lg md:text-2xl lg:text-3xl">
-            {bills.length}
-          </strong>
-        </div>
+      <div className="grid grid-cols-2 gap-2 md:gap-3 lg:gap-5">
 
-        <div className="card p-2 md:p-4">
-          <span className="text-white text-xs md:text-sm">
+        <div className="card p-3 md:p-4">
+          <span className="text-xs md:text-sm font-semibold">
             <span className="hidden md:inline-block">Total</span> Paid
           </span>
-          <strong className="text-green-500 font-bold md:text-2xl lg:text-3xl">
+          <strong className="text-green-600 font-bold text-lg md:text-3xl lg:text-4xl text-shadow-2xs">
             ৳{totalPaid.toLocaleString()}
           </strong>
         </div>
 
-        <div className="card p-2 md:p-4">
-          <span className="text-white text-xs md:text-sm">
+        <div className="card p-3 md:p-5">
+          <span className="text-xs md:text-sm font-semibold">
             <span className="hidden md:inline-block">Total</span> Pending
           </span>
-          <strong className="text-orange-500 font-bold md:text-2xl lg:text-3xl">
+          <strong className="text-orange-600 font-bold text-lg md:text-3xl lg:text-4xl text-shadow-2xs">
             ৳{totalPending.toLocaleString()}
           </strong>
         </div>
@@ -119,7 +113,7 @@ export default function BillsTable({ userRole }: { userRole: string }) {
 
         {/* ===== Table ==== */}
 
-        <div className="w-full h-100 overflow-y-scroll overflow-x-auto">
+        <div className="w-full h-full overflow-y-scroll overflow-x-auto">
           <table className="min-w-full whitespace-nowrap">
             <thead className="sticky -top-0.5">
               <tr>
@@ -128,6 +122,7 @@ export default function BillsTable({ userRole }: { userRole: string }) {
                 <th>Customer</th>
                 <th>Quantity</th>
                 <th>Amount</th>
+                <th>Approximate</th>
                 <th>Status</th>
                 <th>Paid At</th>
                 <th>Method</th>
@@ -163,7 +158,7 @@ export default function BillsTable({ userRole }: { userRole: string }) {
                 {bills.map((bill) => (
                   <tr
                     key={bill._id}
-                    className="odd:bg-white/5 even:bg-white/8 hover:bg-white/20 text-sm text-green-50/80"
+                    className="odd:bg-white/5 even:bg-white/8 hover:bg-white/20 text-sm text-black/80"
                   >
                     <td className="px-4 py-2 text-center">{bill.invoice}</td>
                     <td className="px-4 py-2 text-center">
@@ -175,6 +170,9 @@ export default function BillsTable({ userRole }: { userRole: string }) {
                     </td>
                     <td className="px-4 py-2 text-right font-semibold">
                       {bill.amount.toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2 text-center">
+                      {format(bill.aprxDate || new Date(), "dd MMM yyyy")}
                     </td>
                     <td>
                       {bill.status === "paid" ? (

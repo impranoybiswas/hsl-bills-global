@@ -7,17 +7,14 @@ import toast from "react-hot-toast";
 import { generatePDF } from "../libs/generatePDF";
 import { HiOutlinePlus } from "react-icons/hi2";
 
-export default function AddBill({ userRole, refetch, addedBy }: { userRole: string; refetch: () => void; addedBy: string }) {
+export default function AddCustomer({ userRole }: { userRole: string }) {
   const [customerName, setCustomerName] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [expiryDate, setExpiryDate] = useState("");
-  const [aprxDate, setAprxDate] = useState("");
   const [isMonthly, setIsMonthly] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const { data: customers } = useCustomers();
-
-  const canEdit = userRole === "editor" || userRole === "admin";
 
   // Create unique customer list for dropdown
   const uniqueCustomers = useMemo(() => {
@@ -55,15 +52,11 @@ export default function AddBill({ userRole, refetch, addedBy }: { userRole: stri
         customer: selectedCustomer.name,
         quantity: selectedCustomer.isMonthly ? "monthly" : quantity,
         amount: selectedCustomer.price * quantity,
-        aprxDate,
-        addedBy,
       });
 
       toast.success(
         `Bill added successfully! Invoice: ${response.data.invoice}`
       );
-
-      refetch();
 
       generatePDF({
         invoice: response.data.invoice,
@@ -108,12 +101,11 @@ export default function AddBill({ userRole, refetch, addedBy }: { userRole: stri
               Create New Bill
             </h2>
 
-            <form onSubmit={handleAddBill} className="flex flex-col">
-              <p className="text-sm mt-3 mb-1">Customer</p>
+            <form onSubmit={handleAddBill} className="flex flex-col gap-4">
               <select
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                className="border border-black/20 px-3 py-2 rounded-md w-full mb-2"
+                className="border px-3 py-2 rounded-md w-full"
               >
                 <option value="">Select Customer</option>
                 {uniqueCustomers.map((name) => (
@@ -122,12 +114,12 @@ export default function AddBill({ userRole, refetch, addedBy }: { userRole: stri
                   </option>
                 ))}
               </select>
-              <p className="text-sm mt-3 mb-1">Quantity</p>
+
               {!isMonthly && (
                 <select
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="border border-black/20 px-3 py-2 rounded-md w-full mb-2"
+                  className="border px-3 py-2 rounded-md w-full"
                 >
                   {[1, 2, 3, 4, 5].map((num) => (
                     <option key={num} value={num}>
@@ -136,19 +128,12 @@ export default function AddBill({ userRole, refetch, addedBy }: { userRole: stri
                   ))}
                 </select>
               )}
-              <p className="text-sm mt-3 mb-1">Approximate Date</p>
-              <input
-                type="date"
-                value={aprxDate}
-                onChange={(e) => setAprxDate(e.target.value)}
-                className="border border-black/20 px-3 py-2 rounded-md w-full mb-4"
-              />
-              <p className="text-sm mb-1">Expiry Date</p>
+              <p className="text-sm text-center mt-3">Expiry Date</p>
               <input
                 type="date"
                 value={expiryDate}
                 onChange={(e) => setExpiryDate(e.target.value)}
-                className="border border-black/20 px-3 py-2 rounded-md w-full mb-4"
+                className="border px-3 py-2 rounded-md w-full"
               />
 
               {selectedCustomer && (
@@ -162,15 +147,15 @@ export default function AddBill({ userRole, refetch, addedBy }: { userRole: stri
 
               <button
                 type="submit"
-                disabled={!canEdit}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition"
+                disabled={userRole !== "editor"}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 Add & Download
               </button>
             </form>
-            {!canEdit && (
+            {userRole !== "editor" && (
               <p className="mt-3 text-sm text-red-500 text-center">
-                Only Admin and Editor can add new Bill
+                Only Editor can add new Bills
               </p>
             )}
           </div>

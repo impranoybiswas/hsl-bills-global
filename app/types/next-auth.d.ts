@@ -11,6 +11,8 @@ declare global {
     date: string;
     method?: string;
     paidAt?: string | Date;
+    aprxDate?: string | Date;
+    addedBy?: string;
   }
 
   interface Customer {

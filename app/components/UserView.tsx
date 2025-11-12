@@ -3,16 +3,17 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-
 export default function UserView() {
   const { data: session, status } = useSession();
   return (
-    <div className="w-full py-20 flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-semibold text-green-600 mb-6">
+    <main>
+      <h1 className="text-3xl md:text-4xl font-semibold text-green-700 mb-6">
         Welcome to HSL Bills
       </h1>
-      Hello {status === "loading" ? "User" : session?.user?.name}
-      <p className="mt-3">
+      <p className="text-lg font-semibold text-center">
+        Hello {status === "loading" ? "User" : session?.user?.name}
+      </p>
+      <p className="mt-2 text-center">
         Please Contact{" "}
         <Link
           href="https://impranoybiswas.vercel.app/"
@@ -22,6 +23,6 @@ export default function UserView() {
         </Link>{" "}
         to update your role (Admin, Viewer, Editor)
       </p>
-    </div>
+    </main>
   );
 }

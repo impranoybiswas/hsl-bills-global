@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
 import axiosSecure from "../libs/axiosSecure";
 
-export default function EditBill({
+export default function EditCustomer({
   bill,
   userRole,
   refetch,
@@ -17,8 +17,6 @@ export default function EditBill({
   const [showModal, setShowModal] = useState(false);
   const [newStatus, setNewStatus] = useState("");
   const [method, setMethod] = useState("");
-
-  const canEdit = userRole === "editor" || userRole === "admin";
 
   const handleEditBill = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +48,7 @@ export default function EditBill({
         onClick={() => setShowModal(true)}
         className="flex items-center justify-center gap-2 cursor-pointer w-full h-full text-blue-600 hover:text-blue-800"
       >
-        <FiEdit /> Update
+        <FiEdit /> Edit
       </button>
 
       {showModal && (
@@ -107,18 +105,13 @@ export default function EditBill({
                 </button>
                 <button
                   type="submit"
-                  disabled={!canEdit}
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={userRole !== "editor"}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Save Changes
                 </button>
               </div>
             </form>
-            {!canEdit && (
-              <p className="mt-3 text-sm text-red-500 text-center">
-                Only Admin and Editor can update Bill
-              </p>
-            )}
           </div>
         </div>
       )}

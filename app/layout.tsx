@@ -17,9 +17,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Healthcare Solutions Ltd | Bills by Pranoy",
-  description: "Healthcare Solutions Ltd Company Bills by Pranoy Biswas Bappa",
-  keywords: ["Bills", "Next.js", "Healthcare", "Solutions"],
+  title: "Healthcare Solutions Ltd | Bill Management",
+  description: "Healthcare Solutions Ltd Company all Bills and Customers Management",
+  keywords: ["Bills", "Next.js", "Healthcare", "Solutions", "Medical"],
 };
 
 export default function RootLayout({
