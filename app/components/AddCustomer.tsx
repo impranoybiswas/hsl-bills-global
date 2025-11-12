@@ -3,9 +3,15 @@
 import React, { useState } from "react";
 import axiosSecure from "../libs/axiosSecure";
 import toast from "react-hot-toast";
-import { HiOutlinePlus } from "react-icons/hi2";
+import { FiPlus } from "react-icons/fi";
 
-export default function AddCustomer({ userRole, refetch }: { userRole: string, refetch: () => void }) {
+export default function AddCustomer({
+  userRole,
+  refetch,
+}: {
+  userRole: string;
+  refetch: () => void;
+}) {
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -57,12 +63,9 @@ export default function AddCustomer({ userRole, refetch }: { userRole: string, r
     <div className="w-full h-full relative">
       <button
         onClick={() => setShowModal(true)}
-        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition flex items-center gap-2 shadow-sm group"
+        className="bg-green-600 hover:bg-green-700 text-white rounded-full transition flex items-center justify-center cursor-pointer shadow-sm group size-12"
       >
-        <span className="border border-white p-1 rounded-full group-hover:bg-green-800">
-          <HiOutlinePlus size={14} />
-        </span>
-        Add Customer
+        <FiPlus size={25} />
       </button>
 
       {showModal && (
@@ -95,7 +98,7 @@ export default function AddCustomer({ userRole, refetch }: { userRole: string, r
                 className="border px-3 py-2 rounded-md w-full"
               />
 
-<input
+              <input
                 type="text"
                 value={product}
                 onChange={(e) => setProduct(e.target.value)}

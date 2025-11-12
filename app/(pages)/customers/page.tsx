@@ -37,8 +37,8 @@ export default function Customers() {
             {isLoading ? (
               <tbody>
                 <tr>
-                  <td colSpan={5}>
-                    <div className="w-full h-50 flex items-center justify-center">
+                  <td colSpan={7}>
+                    <div className="w-full p-20 flex items-center justify-center">
                       <TbLoader2
                         size={50}
                         className="animate-spin text-green-500"
@@ -47,12 +47,12 @@ export default function Customers() {
                   </td>
                 </tr>
               </tbody>
-            ) : isError ? (
+            ) : isError || customers?.length === 0 ? (
               <tbody>
                 <tr>
-                  <td colSpan={5}>
-                    <div className="w-full h-50 flex items-center justify-center text-red-500">
-                      Failed to load customers.
+                  <td colSpan={7}>
+                    <div className="w-full p-20 flex items-center justify-center text-red-500">
+                      No Customers Found.
                     </div>
                   </td>
                 </tr>

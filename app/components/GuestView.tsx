@@ -19,10 +19,13 @@ export default function GuestView() {
         Signed in to Show Bills and Add New Bills
       </p>
       <p className="mt-1 text-sm text-black/70">
-        Viewer can only see the list of Bills
+        Member can only see the list of Bills
       </p>
       <p className="mt-1 text-sm text-black/70">
         Editor can add new Bills and update existing Bills
+      </p>
+      <p className="mt-1 text-sm text-black/70">
+        Admin has full access to all features
       </p>
     </main>
   );

@@ -21,7 +21,7 @@ export default function UserView() {
         >
           Pranoy
         </Link>{" "}
-        to update your role (Admin, Viewer, Editor)
+        to update your role (Admin, Member, Editor)
       </p>
     </main>
   );

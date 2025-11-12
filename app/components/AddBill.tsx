@@ -5,9 +5,17 @@ import { useCustomers } from "../hooks/useCustomers";
 import axiosSecure from "../libs/axiosSecure";
 import toast from "react-hot-toast";
 import { generatePDF } from "../libs/generatePDF";
-import { HiOutlinePlus } from "react-icons/hi2";
+import { FiPlus } from "react-icons/fi";
 
-export default function AddBill({ userRole, refetch, addedBy }: { userRole: string; refetch: () => void; addedBy: string }) {
+export default function AddBill({
+  userRole,
+  refetch,
+  addedBy,
+}: {
+  userRole: string;
+  refetch: () => void;
+  addedBy: string;
+}) {
   const [customerName, setCustomerName] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [expiryDate, setExpiryDate] = useState("");
@@ -87,12 +95,9 @@ export default function AddBill({ userRole, refetch, addedBy }: { userRole: stri
     <div className="w-full h-full relative z-100">
       <button
         onClick={() => setShowModal(true)}
-        className="bg-green-600 hover:bg-green-700 text-white p-2 pr-4 rounded-full transition flex items-center gap-2 cursor-pointer shadow-sm group"
+        className="bg-green-600 hover:bg-green-700 text-white rounded-full transition flex items-center justify-center cursor-pointer shadow-sm group size-12"
       >
-        <span className="border border-white p-1 rounded-full group-hover:bg-green-800">
-          <HiOutlinePlus size={14} />
-        </span>
-        ADD BILL
+        <FiPlus size={25} />
       </button>
 
       {showModal && (
@@ -143,7 +148,7 @@ export default function AddBill({ userRole, refetch, addedBy }: { userRole: stri
                 onChange={(e) => setAprxDate(e.target.value)}
                 className="border border-black/20 px-3 py-2 rounded-md w-full mb-4"
               />
-              <p className="text-sm mb-1">Expiry Date</p>
+              <p className="text-sm mb-1">Product Expiry Date</p>
               <input
                 type="date"
                 value={expiryDate}
@@ -152,7 +157,7 @@ export default function AddBill({ userRole, refetch, addedBy }: { userRole: stri
               />
 
               {selectedCustomer && (
-                <p className="text-gray-700 font-medium text-center">
+                <p className="text-gray-700 font-medium text-center mb-3">
                   Total Amount:{" "}
                   <span className="text-green-600 font-semibold">
                     ৳{selectedCustomer.price * quantity}

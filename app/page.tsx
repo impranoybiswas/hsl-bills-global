@@ -10,6 +10,7 @@ import { useBills } from "./hooks/useBills";
 import { useCustomers } from "./hooks/useCustomers";
 import EditBill from "./components/EditBill";
 import AddBill from "./components/AddBill";
+import { RiSortNumberAsc, RiSortNumberDesc } from "react-icons/ri";
 
 export default function Home() {
   const { data: session, status: sessionStatus } = useSession();
@@ -29,6 +30,10 @@ export default function Home() {
   } = useBills({ status, customer, sortOrder });
 
   const { data: customers } = useCustomers();
+
+  const handleSortToggle = () => {
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+  };
 
   const uniqueCustomers = useMemo(() => {
     if (!customers) return [];
@@ -77,7 +82,7 @@ export default function Home() {
 
       <div className="card flex-1 flex flex-col overflow-hidden">
         {/* ===== Filters ==== */}
-        <div className="flex items-center justify-between gap-2 p-3">
+        <div className="flex items-center justify-between gap-2 p-2">
           <div className="flex gap-2">
             <div className="dropCard">
               <select
@@ -103,15 +108,20 @@ export default function Home() {
               </select>
             </div>
           </div>
-          <div className="dropCard">
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
-              className="select"
-            >
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
-            </select>
+          
+          <div
+            onClick={handleSortToggle}
+            className="dropCard cursor-pointer text-sm"
+          >
+            {sortOrder === "asc" ? (
+              <span className="flex items-center gap-1">
+                <RiSortNumberAsc /> Ascending
+              </span>
+            ) : (
+              <span className="flex items-center gap-1">
+                <RiSortNumberDesc /> Descending
+              </span>
+            )}
           </div>
         </div>
 
@@ -138,8 +148,8 @@ export default function Home() {
             {isLoading ? (
               <tbody>
                 <tr>
-                  <td colSpan={9}>
-                    <div className="w-full h-50 flex items-center justify-center">
+                  <td colSpan={11}>
+                    <div className="w-full p-20 flex items-center justify-center">
                       <TbLoader2
                         size={50}
                         className="animate-spin text-green-500"
@@ -148,12 +158,12 @@ export default function Home() {
                   </td>
                 </tr>
               </tbody>
-            ) : isError ? (
+            ) : isError || bills.length === 0 ? (
               <tbody>
                 <tr>
-                  <td colSpan={9}>
-                    <div className="w-full h-50 flex items-center justify-center text-green-500">
-                      Failed to load bills.
+                  <td colSpan={11}>
+                    <div className="w-full py-20 flex items-center justify-center text-green-500">
+                      No Bills Found.
                     </div>
                   </td>
                 </tr>

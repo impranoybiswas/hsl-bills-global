@@ -71,7 +71,7 @@ export default function EditUser({
                   className="w-full border border-gray-300 px-3 py-2 rounded-md"
                 >
                   <option value="user">User</option>
-                  <option value="viewer">Viewer</option>
+                  <option value="member">Member</option>
                   <option value="editor">Editor</option>
                   <option value="admin">Admin</option>
                 </select>

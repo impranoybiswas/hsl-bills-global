@@ -14,7 +14,7 @@ export default function LayoutContent({ children }: { children: ReactNode }) {
   if (status === "unauthenticated") return <GuestView />;
   if (status === "authenticated") {
     if (userRole === "user") return <UserView />;
-    if (["viewer", "editor", "admin"].includes(userRole)) return children;
+    if (["member", "editor", "admin"].includes(userRole)) return children;
   }
 
   return null;
