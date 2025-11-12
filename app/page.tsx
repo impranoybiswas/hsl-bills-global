@@ -13,8 +13,10 @@ import AddBill from "./components/AddBill";
 
 export default function Home() {
   const { data: session, status: sessionStatus } = useSession();
-  const userRole = sessionStatus === "loading" ? "user" : session?.user?.role || "user";
-  const userEmail = sessionStatus === "loading" ? "-" : session?.user?.email || "-";
+  const userRole =
+    sessionStatus === "loading" ? "user" : session?.user?.role || "user";
+  const userEmail =
+    sessionStatus === "loading" ? "-" : session?.user?.email || "-";
   const [status, setStatus] = useState("");
   const [customer, setCustomer] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -116,7 +118,7 @@ export default function Home() {
         {/* ===== Table ==== */}
 
         <div className="w-full h-full overflow-y-scroll overflow-x-auto">
-          <table className="min-w-full whitespace-nowrap">
+          <table className="min-w-full whitespace-nowrap mb-12">
             <thead className="sticky -top-0.5">
               <tr>
                 <th>Invoice</th>

@@ -1,163 +1,156 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { useCustomers } from "../hooks/useCustomers";
+import React, { useState } from "react";
 import axiosSecure from "../libs/axiosSecure";
 import toast from "react-hot-toast";
-import { generatePDF } from "../libs/generatePDF";
 import { HiOutlinePlus } from "react-icons/hi2";
 
-export default function AddCustomer({ userRole }: { userRole: string }) {
-  const [customerName, setCustomerName] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [expiryDate, setExpiryDate] = useState("");
-  const [isMonthly, setIsMonthly] = useState(false);
+export default function AddCustomer({ userRole, refetch }: { userRole: string, refetch: () => void }) {
   const [showModal, setShowModal] = useState(false);
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [product, setProduct] = useState("");
+  const [price, setPrice] = useState("");
+  const [isMonthly, setIsMonthly] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { data: customers } = useCustomers();
-
-  // Create unique customer list for dropdown
-  const uniqueCustomers = useMemo(() => {
-    if (!customers) return [];
-    const names = customers.map((c) => c.name);
-    return Array.from(new Set(names));
-  }, [customers]);
-
-  // Currently selected customer
-  const selectedCustomer = useMemo(() => {
-    if (!customers || !customerName) return null;
-    return customers.find((c) => c.name === customerName) || null;
-  }, [customers, customerName]);
-
-  useEffect(() => {
-    if (selectedCustomer) {
-      setTimeout(() => {
-        setIsMonthly(selectedCustomer.isMonthly);
-        setQuantity(1);
-      }, 0);
-    }
-  }, [selectedCustomer]);
-
-  // Handle Bill Creation
-  const handleAddBill = async (e: React.FormEvent) => {
+  // Handle form submit
+  const handleAddCustomer = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedCustomer) {
-      toast.error("Please select a customer first.");
+    if (!name || !address || !price) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    if (userRole !== "admin") {
+      toast.error("Only Admin can add a new customer.");
       return;
     }
 
     try {
-      const response = await axiosSecure.post("/api/bills", {
-        customer: selectedCustomer.name,
-        quantity: selectedCustomer.isMonthly ? "monthly" : quantity,
-        amount: selectedCustomer.price * quantity,
+      setLoading(true);
+      await axiosSecure.post("/api/customers", {
+        name,
+        address,
+        product,
+        price: Number(price),
+        isMonthly,
       });
 
-      toast.success(
-        `Bill added successfully! Invoice: ${response.data.invoice}`
-      );
-
-      generatePDF({
-        invoice: response.data.invoice,
-        date: new Date().toISOString(),
-        selectedCustomer,
-        quantity,
-        expiryDate,
-      });
-
+      toast.success(`Customer added successfully!`);
       setShowModal(false);
-      setCustomerName("");
-      setQuantity(1);
-      setExpiryDate("");
+      setName("");
+      setAddress("");
+      setPrice("");
+      setIsMonthly(false);
+      refetch();
     } catch (error) {
-      console.error("Error adding bill:", error);
-      toast.error("Failed to add bill. Check console for details.");
+      console.error("Error adding customer:", error);
+      toast.error("Failed to add customer. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="w-full h-full relative z-100">
+    <div className="w-full h-full relative">
       <button
         onClick={() => setShowModal(true)}
-        className="bg-green-600 hover:bg-green-700 text-white p-2 pr-4 rounded-full transition flex items-center gap-2 cursor-pointer shadow-sm group"
+        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition flex items-center gap-2 shadow-sm group"
       >
         <span className="border border-white p-1 rounded-full group-hover:bg-green-800">
           <HiOutlinePlus size={14} />
         </span>
-        ADD BILL
+        Add Customer
       </button>
 
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
-          className="fixed inset-0 bg-black/70 flex justify-center items-center z-100"
+          className="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
         >
           <div
             onClick={(e) => e.stopPropagation()}
             className="bg-white text-gray-900 rounded-lg p-6 w-full max-w-md shadow-lg"
           >
-            <h2 className="text-lg font-semibold mb-4 text-center">
-              Create New Bill
+            <h2 className="text-lg font-semibold mb-4 text-center text-green-700">
+              Add New Customer
             </h2>
 
-            <form onSubmit={handleAddBill} className="flex flex-col gap-4">
-              <select
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                className="border px-3 py-2 rounded-md w-full"
-              >
-                <option value="">Select Customer</option>
-                {uniqueCustomers.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-
-              {!isMonthly && (
-                <select
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="border px-3 py-2 rounded-md w-full"
-                >
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>
-                      {num}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <p className="text-sm text-center mt-3">Expiry Date</p>
+            <form onSubmit={handleAddCustomer} className="flex flex-col gap-4">
               <input
-                type="date"
-                value={expiryDate}
-                onChange={(e) => setExpiryDate(e.target.value)}
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Customer Name"
                 className="border px-3 py-2 rounded-md w-full"
               />
 
-              {selectedCustomer && (
-                <p className="text-gray-700 font-medium text-center">
-                  Total Amount:{" "}
-                  <span className="text-green-600 font-semibold">
-                    ৳{selectedCustomer.price * quantity}
-                  </span>
-                </p>
-              )}
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Address"
+                className="border px-3 py-2 rounded-md w-full"
+              />
+
+<input
+                type="text"
+                value={product}
+                onChange={(e) => setProduct(e.target.value)}
+                placeholder="Product"
+                className="border px-3 py-2 rounded-md w-full"
+              />
+
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Price"
+                className="border px-3 py-2 rounded-md w-full"
+              />
+
+              <div className="flex items-center justify-between border px-3 py-2 rounded-md">
+                <label className="font-medium text-gray-700">
+                  Is Monthly Customer?
+                </label>
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="isMonthly"
+                      checked={isMonthly}
+                      onChange={() => setIsMonthly(true)}
+                    />
+                    Yes
+                  </label>
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="isMonthly"
+                      checked={!isMonthly}
+                      onChange={() => setIsMonthly(false)}
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
 
               <button
                 type="submit"
-                disabled={userRole !== "editor"}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition"
+                disabled={userRole !== "admin" || loading}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
-                Add & Download
+                {loading ? "Adding..." : "Add Customer"}
               </button>
+
+              {userRole !== "admin" && (
+                <p className="mt-2 text-sm text-red-500 text-center">
+                  Only Admin can add customers.
+                </p>
+              )}
             </form>
-            {userRole !== "editor" && (
-              <p className="mt-3 text-sm text-red-500 text-center">
-                Only Editor can add new Bills
-              </p>
-            )}
           </div>
         </div>
       )}

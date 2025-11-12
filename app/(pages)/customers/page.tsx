@@ -1,10 +1,16 @@
 "use client";
 
+import AddCustomer from "@/app/components/AddCustomer";
+import EditCustomer from "@/app/components/EditCustomer";
 import { useCustomers } from "@/app/hooks/useCustomers";
+import { useSession } from "next-auth/react";
 import { TbLoader2 } from "react-icons/tb";
 
 export default function Customers() {
-  const { data: customers, isLoading, isError } = useCustomers();
+  const { data: customers, isLoading, isError, refetch } = useCustomers();
+  const { data: session, status: sessionStatus } = useSession();
+  const userRole =
+    sessionStatus === "loading" ? "user" : session?.user?.role || "user";
 
   return (
     <main>
@@ -12,10 +18,10 @@ export default function Customers() {
         All Customers
       </h1>
 
-      <div className="card flex-1">
+      <div className="card flex-1 relative z-1">
         {/* ===== Table ==== */}
         <div className="w-full h-full overflow-y-scroll overflow-x-auto">
-          <table className="min-w-full whitespace-nowrap">
+          <table className="min-w-full whitespace-nowrap mb-12">
             <thead>
               <tr>
                 <th>ID</th>
@@ -23,6 +29,8 @@ export default function Customers() {
                 <th>Address</th>
                 <th>Product</th>
                 <th>Amount</th>
+                <th>Monthly</th>
+                <th>Action</th>
               </tr>
             </thead>
 
@@ -72,6 +80,20 @@ export default function Customers() {
                           ? customer.price.toLocaleString()
                           : "—"}
                       </td>
+                      <td>
+                        {customer.isMonthly ? (
+                          <span className="text-green-600">Yes</span>
+                        ) : (
+                          <span className="text-red-600">No</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        <EditCustomer
+                          customer={customer}
+                          userRole={userRole}
+                          refetch={refetch}
+                        />
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -87,6 +109,10 @@ export default function Customers() {
               </tbody>
             )}
           </table>
+        </div>
+        {/* ===== Floating Add Button ===== */}
+        <div className="fixed bottom-10 right-10">
+          <AddCustomer userRole={userRole} refetch={refetch} />
         </div>
       </div>
     </main>
